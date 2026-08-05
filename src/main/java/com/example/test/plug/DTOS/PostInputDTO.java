@@ -1,25 +1,15 @@
 package com.example.test.plug.DTOS;
 
+import jakarta.validation.constraints.NotBlank;
+import jakarta.validation.constraints.NotNull;
+import lombok.Data;
+
+@Data
 public class PostInputDTO {
+    @NotNull
+    @NotBlank
     private String login;
+    @NotNull
+    @NotBlank
     private String password;
-
-    public PostInputDTO() {
-    }
-
-    public String getLogin() {
-        return login;
-    }
-
-    public String getPassword() {
-        return password;
-    }
-
-    public void setLogin(String login) {
-        this.login = login;
-    }
-
-    public void setPassword(String password) {
-        this.password = password;
-    }
 }
