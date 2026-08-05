@@ -1,5 +1,6 @@
 package com.example.test.plug.DTOS;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import lombok.Data;
 
 import java.time.LocalDateTime;
@@ -10,6 +11,7 @@ public class PostOutputDTO {
     private String login;
     private String password;
     private String date;
+    @JsonIgnore
     private final DateTimeFormatter formatter = DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm:ss");
 
     public void setDate() {
