@@ -4,15 +4,11 @@ import com.example.test.plug.DTOS.GetOutputDTO;
 import com.example.test.plug.DTOS.PostInputDTO;
 import com.example.test.plug.DTOS.PostOutputDTO;
 import com.example.test.plug.Services.Delay;
-import jakarta.servlet.ServletException;
 import jakarta.validation.Valid;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
-
-import java.util.HashMap;
-import java.util.Map;
 
 @RestController
 @RequestMapping("/login")
@@ -21,33 +17,20 @@ public class GetPostController {
     private Delay delay;
 
     @GetMapping
-    public ResponseEntity<Map<String, Object>> getLogin() throws ServletException {
+    public ResponseEntity<?> getLogin() {
         delay.timeStop();
 
-        GetOutputDTO getOutputDTO = new GetOutputDTO();
-        getOutputDTO.setLogin("Login1");
-        getOutputDTO.setStatus("ok");
+        GetOutputDTO getOutputDTO = new GetOutputDTO("Login1", "ok");
 
-        Map<String, Object> map = new HashMap<>();
-        map.put("status", HttpStatus.OK.value());
-        map.put("message", HttpStatus.OK.toString());
-        map.put("data", getOutputDTO);
-        return new ResponseEntity<>(map, HttpStatus.OK);
+        return new ResponseEntity<>(getOutputDTO, HttpStatus.OK);
     }
 
     @PostMapping
-    public ResponseEntity<Map<String, Object>> postLogin(@Valid @RequestBody PostInputDTO postInputDTO) throws ServletException {
+    public ResponseEntity<?> postLogin(@Valid @RequestBody PostInputDTO postInputDTO) {
         delay.timeStop();
 
-        PostOutputDTO postOutputDTO = new PostOutputDTO();
-        postOutputDTO.setLogin(postInputDTO.getLogin());
-        postOutputDTO.setPassword(postInputDTO.getPassword());
-        postOutputDTO.setDate();
+        PostOutputDTO postOutputDTO = new PostOutputDTO(postInputDTO.getLogin(), postInputDTO.getPassword());
 
-        Map<String, Object> map = new HashMap<>();
-        map.put("status", HttpStatus.CREATED.value());
-        map.put("message", HttpStatus.CREATED.toString());
-        map.put("data", postOutputDTO);
-        return new ResponseEntity<>(map, HttpStatus.CREATED);
+        return new ResponseEntity<>(postOutputDTO, HttpStatus.CREATED);
     }
 }
