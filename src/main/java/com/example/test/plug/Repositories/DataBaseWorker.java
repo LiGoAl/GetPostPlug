@@ -8,14 +8,11 @@ import java.time.LocalDateTime;
 
 @Repository
 public class DataBaseWorker {
-    private static final String url = "jdbc:postgresql://192.168.1.5:5432/plugdb";
-    private static final String username = "user";
-    private static final String password = "password";
 
     public UserDTO select(String login) throws SQLException {
         String sql = "select upd.*, ue.email from user_passwords_dates upd join user_emails ue on upd.login = ue.login where upd.login = ?";
 
-        try (Connection conn = DriverManager.getConnection(url, username, password);
+        try (Connection conn = DriverManager.getConnection("${app.database.url}", "${app.database.user}", "${app.database.password}");
         PreparedStatement ps = conn.prepareStatement(sql)) {
             ps.setString(1, login);
 
@@ -34,9 +31,9 @@ public class DataBaseWorker {
         String sql1 = "insert into user_passwords_dates (login, password, date) values (?, ?, ?)";
         String sql2 = "insert into user_emails (login, email) values (?, ?)";
 
-        try (Connection conn = DriverManager.getConnection(url, username, password);
+        try (Connection conn = DriverManager.getConnection("${app.database.url}", "${app.database.user}", "${app.database.password}");
         PreparedStatement ps1 = conn.prepareStatement(sql1);
-        PreparedStatement ps2 = conn.prepareStatement(sql2);) {
+        PreparedStatement ps2 = conn.prepareStatement(sql2)) {
             conn.setAutoCommit(false);
 
             ps1.setString(1, user.getLogin());
