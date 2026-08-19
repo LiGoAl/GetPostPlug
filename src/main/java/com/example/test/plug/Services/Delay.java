@@ -2,7 +2,6 @@ package com.example.test.plug.Services;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
 
@@ -14,7 +13,6 @@ public class Delay {
     private final long highBorder;
     private final Logger logger = LoggerFactory.getLogger(Delay.class);
 
-    @Autowired
     public Delay(@Value("${app.delay.low_border}") long lowBorder, @Value("${app.delay.high_border}") long highBorder) {
         this.lowBorder = lowBorder;
         this.highBorder = highBorder;
