@@ -34,6 +34,13 @@ public class UserDTO {
         this.date = date;
     }
 
+    public UserDTO(String login, String password, String email) {
+        this.login = login;
+        this.password = password;
+        this.email = email;
+        this.date = LocalDateTime.now();
+    }
+
     @JsonCreator
     public UserDTO() {
         this.date = LocalDateTime.now();

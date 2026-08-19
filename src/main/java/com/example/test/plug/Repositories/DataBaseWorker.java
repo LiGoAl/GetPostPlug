@@ -1,6 +1,7 @@
 package com.example.test.plug.Repositories;
 
 import com.example.test.plug.DTOS.UserDTO;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Repository;
 
 import java.sql.*;
@@ -8,11 +9,20 @@ import java.time.LocalDateTime;
 
 @Repository
 public class DataBaseWorker {
+    private final String url;
+    private final String username;
+    private final String password;
+
+    public DataBaseWorker(@Value("${app.database.url}") String url, @Value("${app.database.user}") String username, @Value("${app.database.password}") String password) {
+        this.url = url;
+        this.username = username;
+        this.password = password;
+    }
 
     public UserDTO select(String login) throws SQLException {
         String sql = "select upd.*, ue.email from user_passwords_dates upd join user_emails ue on upd.login = ue.login where upd.login = ?";
 
-        try (Connection conn = DriverManager.getConnection("${app.database.url}", "${app.database.user}", "${app.database.password}");
+        try (Connection conn = DriverManager.getConnection(url, username, password);
         PreparedStatement ps = conn.prepareStatement(sql)) {
             ps.setString(1, login);
 
@@ -31,7 +41,7 @@ public class DataBaseWorker {
         String sql1 = "insert into user_passwords_dates (login, password, date) values (?, ?, ?)";
         String sql2 = "insert into user_emails (login, email) values (?, ?)";
 
-        try (Connection conn = DriverManager.getConnection("${app.database.url}", "${app.database.user}", "${app.database.password}");
+        try (Connection conn = DriverManager.getConnection(url, username, password);
         PreparedStatement ps1 = conn.prepareStatement(sql1);
         PreparedStatement ps2 = conn.prepareStatement(sql2)) {
             conn.setAutoCommit(false);

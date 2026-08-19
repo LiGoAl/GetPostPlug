@@ -3,12 +3,14 @@ package com.example.test.plug.Controllers;
 import com.example.test.plug.DTOS.UserDTO;
 import com.example.test.plug.Repositories.DataBaseWorker;
 import com.example.test.plug.Services.Delay;
+import com.example.test.plug.Services.FileWorker;
 import jakarta.validation.Valid;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
+import java.io.IOException;
 import java.sql.SQLException;
 
 @RestController
@@ -20,6 +22,9 @@ public class GetPostController {
     @Autowired
     private DataBaseWorker dataBaseWorker;
 
+    @Autowired
+    private FileWorker fileWorker;
+
     @GetMapping("/{login}")
     public ResponseEntity<?> getUser(@PathVariable String login) {
         delay.timeStop();
@@ -27,7 +32,22 @@ public class GetPostController {
         UserDTO userDTO = null;
         try {
             userDTO = dataBaseWorker.select(login);
-        } catch (SQLException e) {
+            fileWorker.insert(userDTO);
+        } catch (SQLException | IOException e) {
+            return new ResponseEntity<>(e.getMessage(), HttpStatus.INTERNAL_SERVER_ERROR);
+        }
+
+        return new ResponseEntity<>(userDTO, HttpStatus.OK);
+    }
+
+    @GetMapping("/file")
+    public ResponseEntity<?> getFileUser() {
+        delay.timeStop();
+
+        UserDTO userDTO = null;
+        try {
+            userDTO = fileWorker.select();
+        } catch (IOException e) {
             return new ResponseEntity<>(e.getMessage(), HttpStatus.INTERNAL_SERVER_ERROR);
         }
 
